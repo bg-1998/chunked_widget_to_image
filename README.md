@@ -23,7 +23,7 @@ Add this to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  chunked_widget_to_image: ^0.0.1
+  chunked_widget_to_image: ^0.0.2
 ```
 
 Then run:
@@ -34,26 +34,32 @@ flutter pub get
 
 ## Configuration
 
-By default, the plugin includes support for both PNG and JPEG formats. However, you can customize this behavior by configuring the plugin in your app's `pubspec.yaml` file.
+By default, the plugin includes support for both PNG and JPEG formats. However, you can customize this behavior by setting environment variables at build time.
 
-To disable certain image format supports in your build, add the following to your `pubspec.yaml`:
+To disable certain image format supports in your build, set environment variables when running or building your Flutter app:
 
-```yaml
-# In your app's pubspec.yaml
-dependencies:
-  chunked_widget_to_image:
-    # ... your chunked_widget_to_image dependency configuration
+```bash
+# Disable PNG support
+CHUNKED_WIDGET_TO_PNG=OFF flutter run
 
-# Add this section to configure the plugin
-chunked_widget_to_image:
-  with_png: false   # Set to false to exclude PNG support
-  with_jpeg: false  # Set to false to exclude JPEG support
+# Disable JPEG support
+CHUNKED_WIDGET_TO_JPEG=OFF flutter run
+
+# Disable both PNG and JPEG support (not recommended)
+CHUNKED_WIDGET_TO_PNG=OFF CHUNKED_WIDGET_TO_JPEG=OFF flutter run
 ```
+
+In Android Studio, you can set these environment variables in your Run/Debug Configuration:
+1. Go to Run > Edit Configurations...
+2. Select your Flutter configuration
+3. In the Environment Variables section, add:
+   - Name: `CHUNKED_WIDGET_TO_PNG`, Value: `OFF` (to disable PNG)
+   - Name: `CHUNKED_WIDGET_TO_JPEG`, Value: `OFF` (to disable JPEG)
 
 ### Configuration Options
 
-- `with_png`: Enable/disable PNG support (default: true)
-- `with_jpeg`: Enable/disable JPEG support (default: true)
+- `CHUNKED_WIDGET_TO_PNG`: Enable/disable PNG support (default: ON)
+- `CHUNKED_WIDGET_TO_JPEG`: Enable/disable JPEG support (default: ON)
 
 Disabling unused image format support can significantly reduce your app's binary size.
 

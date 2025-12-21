@@ -6,7 +6,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: ^3.9.2
+  sdk: ^3.0.0
 
 dependencies:
   flutter:
@@ -44,7 +44,3 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/test_img.jpg
-
-chunked_widget_to_image:
-  with_png: true #是否启用png，默认为true
-  with_jpeg: false #是否启用jpeg，默认为true

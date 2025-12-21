@@ -1,37 +1,3 @@
-pubspec = YAML.load_file(File.join('..', 'pubspec.yaml'))
-library_version = pubspec['version'].gsub('+', '-')
-
-current_dir = Dir.pwd
-calling_dir = File.dirname(__FILE__)
-project_dir = calling_dir.slice(0..(calling_dir.index('/.symlinks')))
-symlinks_index = calling_dir.index('/ios/.symlinks')
-if !symlinks_index
-    symlinks_index = calling_dir.index('/.ios/.symlinks')
-end
-
-flutter_project_dir = calling_dir.slice(0..(symlinks_index))
-
-Pod::UI.puts "[chunked_widget_to_image] #{Psych::VERSION}"
-psych_version_gte_500 = Gem::Version.new(Psych::VERSION) >= Gem::Version.new('5.0.0')
-if psych_version_gte_500 == true
-    cfg = YAML.load_file(File.join(flutter_project_dir, 'pubspec.yaml'), aliases: true)
-else
-    cfg = YAML.load_file(File.join(flutter_project_dir, 'pubspec.yaml'))
-end
-
-with_png = "ON"
-
-if cfg['chunked_widget_to_image'] && cfg['chunked_widget_to_image']['with_png'] != true
-    with_png = 'OFF'
-end
-
-with_jpeg = "ON"
-
-if cfg['chunked_widget_to_image'] && cfg['chunked_widget_to_image']['with_jpeg'] != true
-    with_jpeg = 'OFF'
-end
-
-
 #
 # To learn more about a Podspec see http://guides.cocoapods.org/syntax/podspec.html.
 # Run `pod lib lint chunked_widget_to_image.podspec` to validate before publishing.
@@ -56,7 +22,7 @@ A new Flutter project.
     rm -rf build
     mkdir -p build
     cd build
-    cmake ../../src -DCMAKE_OSX_SYSROOT=iphoneos -DCMAKE_OSX_ARCHITECTURES=arm64 -DIOS=ON -DWITH_PNG=#{with_png} -DWITH_JPEG=#{with_jpeg}
+    cmake ../../src -DCMAKE_OSX_SYSROOT=iphoneos -DCMAKE_OSX_ARCHITECTURES=arm64 -DIOS=ON
     make
   CMD
   s.script_phase = {

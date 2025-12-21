@@ -4,7 +4,7 @@
 ![](https://img.shields.io/badge/Platform-Android_iOS_Web_Windows_MacOS_Linux-blue)
 ![](https://img.shields.io/badge/License-MIT-blue)
 
-语言: 简体中文 | [English](README_EN.md)
+语言: 简体中文 | [English](README.md)
 
 一个 Flutter 插件，可以将 Flutter widgets 转换为图像文件，支持通过分块技术处理大图像。
 
@@ -23,7 +23,7 @@
 
 ```yaml
 dependencies:
-  chunked_widget_to_image: ^0.0.1
+  chunked_widget_to_image: ^0.0.2
 ```
 
 然后运行：
@@ -34,26 +34,32 @@ flutter pub get
 
 ## 配置
 
-默认情况下，插件包含对 PNG 和 JPEG 格式的支持。但是，您可以通过在应用程序的 `pubspec.yaml` 文件中配置插件来自定义此行为。
+默认情况下，插件包含对 PNG 和 JPEG 格式的支持。但是，您可以通过设置构建时环境变量来自定义此行为。
 
-要在构建中禁用某些图像格式支持，请在您的 `pubspec.yaml` 中添加以下内容：
+要在构建中禁用某些图像格式支持，请在运行或构建 Flutter 应用时设置环境变量：
 
-```yaml
-# 在你的应用 pubspec.yaml 中
-dependencies:
-  chunked_widget_to_image:
-    # ... 你的 chunked_widget_to_image 依赖配置
+```bash
+# 禁用 PNG 支持
+CHUNKED_WIDGET_TO_PNG=OFF flutter run
 
-# 添加这一部分来配置插件
-chunked_widget_to_image:
-  with_png: false   # 设置为 false 以排除 PNG 支持
-  with_jpeg: false  # 设置为 false 以排除 JPEG 支持
+# 禁用 JPEG 支持
+CHUNKED_WIDGET_TO_JPEG=OFF flutter run
+
+# 同时禁用 PNG 和 JPEG 支持（不推荐）
+CHUNKED_WIDGET_TO_PNG=OFF CHUNKED_WIDGET_TO_JPEG=OFF flutter run
 ```
+
+在 Android Studio 中，您可以在运行/调试配置中设置这些环境变量：
+1. 转到 Run > Edit Configurations...
+2. 选择你的 Flutter 配置
+3. 在 Environment Variables 部分，添加：
+   - Name: `CHUNKED_WIDGET_TO_PNG`, Value: `OFF` (禁用 PNG)
+   - Name: `CHUNKED_WIDGET_TO_JPEG`, Value: `OFF` (禁用 JPEG)
 
 ### 配置选项
 
-- `with_png`: 启用/禁用 PNG 支持 (默认: true)
-- `with_jpeg`: 启用/禁用 JPEG 支持 (默认: true)
+- `CHUNKED_WIDGET_TO_PNG`: 启用/禁用 PNG 支持 (默认: ON)
+- `CHUNKED_WIDGET_TO_JPEG`: 启用/禁用 JPEG 支持 (默认: ON)
 
 禁用未使用的图像格式支持可以显著减小应用程序的二进制大小。
 

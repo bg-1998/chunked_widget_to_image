@@ -23,6 +23,15 @@ include(CMakeParseArguments)
 option(WITH_PNG "Enable PNG support" ON)
 option(WITH_JPEG "Enable JPEG support" ON)
 
+# 检查环境变量，如果设置了就使用环境变量的值覆盖默认值
+if(DEFINED ENV{CHUNKED_WIDGET_TO_PNG})
+  set(WITH_PNG $ENV{CHUNKED_WIDGET_TO_PNG})
+endif()
+
+if(DEFINED ENV{CHUNKED_WIDGET_TO_JPEG})
+  set(WITH_JPEG $ENV{CHUNKED_WIDGET_TO_PNG})
+endif()
+
 # --------------------------------------------------------------------------------
 
 # Include libpng library
