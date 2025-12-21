@@ -1,0 +1,29 @@
+PODS:
+  - chunked_widget_to_image (0.0.1):
+    - FlutterMacOS
+  - FlutterMacOS (1.0.0)
+  - path_provider_foundation (0.0.1):
+    - Flutter
+    - FlutterMacOS
+
+DEPENDENCIES:
+  - chunked_widget_to_image (from `Flutter/ephemeral/.symlinks/plugins/chunked_widget_to_image/macos`)
+  - FlutterMacOS (from `Flutter/ephemeral`)
+  - path_provider_foundation (from `Flutter/ephemeral/.symlinks/plugins/path_provider_foundation/darwin`)
+
+EXTERNAL SOURCES:
+  chunked_widget_to_image:
+    :path: Flutter/ephemeral/.symlinks/plugins/chunked_widget_to_image/macos
+  FlutterMacOS:
+    :path: Flutter/ephemeral
+  path_provider_foundation:
+    :path: Flutter/ephemeral/.symlinks/plugins/path_provider_foundation/darwin
+
+SPEC CHECKSUMS:
+  chunked_widget_to_image: b0b9242787b138bb48a66979238048504ed2e97d
+  FlutterMacOS: d0db08ddef1a9af05a5ec4b724367152bb0500b1
+  path_provider_foundation: bb55f6dbba17d0dccd6737fe6f7f34fbd0376880
+
+PODFILE CHECKSUM: 54d867c82ac51cbd61b565781b9fada492027009
+
+COCOAPODS: 1.16.2

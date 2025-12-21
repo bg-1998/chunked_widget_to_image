@@ -1,0 +1,106 @@
+// The Android Gradle Plugin builds the native code with the Android NDK.
+
+import org.yaml.snakeyaml.Yaml
+
+group = "com.bg1998.chunked_widget_to_image"
+version = "1.0"
+
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath("com.android.tools.build:gradle:8.9.1")
+        classpath("org.yaml:snakeyaml:2.0")
+    }
+}
+
+rootProject.allprojects {
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+apply plugin: "com.android.library"
+
+/**
+ * ================================
+ * 解析宿主 pubspec.yaml（fluwx 风格）
+ * ================================
+ */
+Map loadPubspec() {
+    File pubspecFile
+
+    // 1️⃣ 优先使用 fluwx 同款逻辑：rootProject 上下文
+    def pubspecPath = rootProject.projectDir.parent + File.separator + "pubspec.yaml"
+
+    if (file(pubspecPath).exists()) {
+        pubspecFile = new File(pubspecPath)
+    } else {
+        // 2️⃣ fallback：插件 android 目录的父目录
+        def currentDir = file(".").absolutePath
+        def parentDir = new File(currentDir).getParentFile()
+        pubspecFile = new File(parentDir, "pubspec.yaml")
+    }
+
+    if (!pubspecFile.exists()) {
+        println("WidgetToImage: pubspec.yaml not found, using default config")
+        return [:]
+    }
+
+    InputStream input = new FileInputStream(pubspecFile)
+    Yaml yaml = new Yaml()
+    return (Map) yaml.load(input)
+}
+
+// ================================
+// 读取 chunked_widget_to_image 配置
+// ================================
+Map projectYaml = loadPubspec()
+Map widgetConfig = (Map) projectYaml.get("chunked_widget_to_image")
+
+boolean withPng = true
+boolean withJpeg = true
+
+if (widgetConfig != null) {
+    if (widgetConfig.containsKey("with_png")) {
+        withPng = "${widgetConfig.get("with_png")}".toBoolean()
+    }
+    if (widgetConfig.containsKey("with_jpeg")) {
+        withJpeg = "${widgetConfig.get("with_jpeg")}".toBoolean()
+    }
+}
+
+/**
+ * ================================
+ * Android 配置
+ * ================================
+ */
+android {
+    namespace = "com.bg1998.chunked_widget_to_image"
+
+    compileSdk = 36
+    ndkVersion = android.ndkVersion
+
+    defaultConfig {
+        minSdk = 24
+
+        externalNativeBuild {
+            cmake {
+                arguments(
+                        "-DWITH_PNG=${withPng ? "ON" : "OFF"}",
+                        "-DWITH_JPEG=${withJpeg ? "ON" : "OFF"}"
+                )
+            }
+        }
+    }
+
+    externalNativeBuild {
+        cmake {
+            path = "../src/CMakeLists.txt"
+        }
+    }
+}

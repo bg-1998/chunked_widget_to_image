@@ -1,0 +1,42 @@
+name: chunked_widget_to_image
+description: "A Flutter plugin to convert widgets to image files with support for large images via chunking."
+version: 0.0.1
+homepage: https://github.com/bg-1998/chunked_widget_to_image.git
+
+environment:
+  sdk: ^3.9.2
+  flutter: '>=3.3.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  plugin_platform_interface: ^2.0.2
+  ffi: ^2.1.3
+
+dev_dependencies:
+  ffigen: ^13.0.0
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  plugin:
+    platforms:
+      android:
+        ffiPlugin: true
+      ios:
+        ffiPlugin: true
+      linux:
+        ffiPlugin: true
+      macos:
+        ffiPlugin: true
+      windows:
+        ffiPlugin: true
+
+# 配置项，允许用户自定义插件功能
+#
+# 用户可以在自己的 pubspec.yaml 文件中添加以下配置来控制插件功能：
+# 
+# chunked_widget_to_image:
+#   with_png: false  # 禁用PNG支持以减小包大小
+#   with_jpeg: false # 禁用JPEG支持以减小包大小
