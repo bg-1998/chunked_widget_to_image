@@ -15,7 +15,7 @@ if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Release)
 endif()
 
-# 引入 ExternalProject 模块（关键：用于构建 libjpeg-turbo）
+# 引入 ExternalProject 模块（关键：用于构建 libjpeg-turbo 和 zlib）
 include(ExternalProject)
 include(CMakeParseArguments)
 
@@ -34,6 +34,58 @@ endif()
 
 # --------------------------------------------------------------------------------
 
+# Include zlib library for Windows
+if(WITH_PNG AND WIN32)
+  set(ZLIB_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/deps/zlib)
+  
+  # Check if zlib directory exists
+  if(EXISTS ${ZLIB_SOURCE_DIR})
+    set(ZLIB_BUILD_DIR ${CMAKE_CURRENT_BINARY_DIR}/zlib-build)
+    set(ZLIB_INSTALL_DIR ${CMAKE_CURRENT_BINARY_DIR}/zlib-install)
+    
+    set(ZLIB_CMAKE_ARGS
+      -DCMAKE_INSTALL_PREFIX=${ZLIB_INSTALL_DIR}
+      -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
+      -DBUILD_SHARED_LIBS=OFF
+    )
+    
+    # Windows环境下添加特定参数
+    if(WIN32)
+      list(APPEND ZLIB_CMAKE_ARGS
+        -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER}
+        -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
+      )
+    endif()
+    
+    ExternalProject_Add(
+      zlib
+      SOURCE_DIR ${ZLIB_SOURCE_DIR}
+      BINARY_DIR ${ZLIB_BUILD_DIR}
+      INSTALL_DIR ${ZLIB_INSTALL_DIR}
+      CMAKE_ARGS ${ZLIB_CMAKE_ARGS}
+      BUILD_BYPRODUCTS 
+        ${ZLIB_INSTALL_DIR}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}zlibstatic${CMAKE_STATIC_LIBRARY_SUFFIX}
+        ${ZLIB_INSTALL_DIR}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}zlibstaticd${CMAKE_STATIC_LIBRARY_SUFFIX}
+      LOG_CONFIGURE ON
+      LOG_BUILD ON
+      LOG_INSTALL ON
+    )
+    
+    # 创建导入库目标
+    add_library(zlibstatic STATIC IMPORTED GLOBAL)
+    add_dependencies(zlibstatic zlib)
+    
+    # 设置导入库属性
+    set_target_properties(zlibstatic PROPERTIES
+      INTERFACE_INCLUDE_DIRECTORIES "${ZLIB_SOURCE_DIR}"
+      IMPORTED_LOCATION_DEBUG ${ZLIB_INSTALL_DIR}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}zlibstaticd${CMAKE_STATIC_LIBRARY_SUFFIX}
+      IMPORTED_LOCATION_RELEASE ${ZLIB_INSTALL_DIR}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}zlibstatic${CMAKE_STATIC_LIBRARY_SUFFIX}
+    )
+  endif()
+endif()
+
+# --------------------------------------------------------------------------------
+
 # Include libpng library
 if(WITH_PNG)
   set(LIBPNG_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/deps/libpng-1.6.43)
@@ -41,6 +93,19 @@ if(WITH_PNG)
   # Handle pnglibconf.h - use prebuilt version
   configure_file(${LIBPNG_SOURCE_DIR}/scripts/pnglibconf.h.prebuilt
                  ${LIBPNG_SOURCE_DIR}/pnglibconf.h)
+
+  # 在Windows上设置libpng的ZLIB相关参数
+  if(WIN32 AND TARGET zlibstatic)
+    # 设置zlib的位置供libpng使用
+    set(PNG_BUILD_ZLIB ON CACHE BOOL "Custom zlib location" FORCE)
+    set(ZLIB_ROOT ${ZLIB_INSTALL_DIR})
+    set(ZLIB_LIBRARY_DEBUG ${ZLIB_INSTALL_DIR}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}zlibstaticd${CMAKE_STATIC_LIBRARY_SUFFIX})
+    set(ZLIB_LIBRARY_RELEASE ${ZLIB_INSTALL_DIR}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}zlibstatic${CMAKE_STATIC_LIBRARY_SUFFIX})
+    set(ZLIB_INCLUDE_DIR ${ZLIB_SOURCE_DIR})
+    
+    # 添加依赖关系确保zlib先构建
+    add_dependencies(png_static zlibstatic)
+  endif()
 
   add_subdirectory(${LIBPNG_SOURCE_DIR} libpng)
 endif()
@@ -141,6 +206,12 @@ if(WITH_JPEG)
     list(APPEND LIBJPEG_CMAKE_ARGS
             -DCMAKE_OSX_ARCHITECTURES=${CMAKE_OSX_ARCHITECTURES}
             -DCMAKE_OSX_DEPLOYMENT_TARGET=${CMAKE_OSX_DEPLOYMENT_TARGET}
+    )
+  # Windows 环境下添加相关参数
+  elseif(WIN32)
+    list(APPEND LIBJPEG_CMAKE_ARGS
+            -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER}
+            -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
     )
   endif()
 

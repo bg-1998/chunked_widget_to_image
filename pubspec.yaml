@@ -1,6 +1,6 @@
 name: chunked_widget_to_image
 description: "A Flutter plugin to convert widgets to image files with support for large images via chunking."
-version: 0.0.2
+version: 1.0.0
 homepage: https://github.com/bg-1998/chunked_widget_to_image.git
 
 topics:
