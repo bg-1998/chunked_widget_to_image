@@ -15,7 +15,8 @@
 - 离屏渲染支持，无需将 Widget 添加到 Widget 树中即可导出
 - 长列表/长内容自动分页导出功能
 - 可配置编译选项，按需启用/禁用图像格式以减少应用体积
-- 使用原生库(libpng, libjpeg-turbo)保证高性能和高质量
+- 移动平台(Android/iOS/macOS)使用原生库(libpng, libjpeg-turbo)保证高性能和高质量
+- Windows 和 Linux 平台使用 libvipsffi 实现图像处理功能
 
 ## 安装
 
@@ -129,7 +130,9 @@ controller.toImageFileFromLongWidget(
 
 ## 构建说明
 
-插件使用 CMake 构建原生代码。原生库 (libpng, libjpeg-turbo, libyuv) 作为子模块集成，并可以根据配置选项有条件地编译。
+移动平台插件使用 CMake 构建原生代码。原生库 (libpng, libjpeg-turbo, libyuv) 作为子模块集成，并可以根据配置选项有条件地编译。
+
+Windows 和 Linux 平台使用 libvipsffi 实现图像处理功能。
 
 当在编译时禁用某个功能时：
 - 相应的源文件会被排除在编译之外

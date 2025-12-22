@@ -15,7 +15,8 @@ A Flutter plugin that converts Flutter widgets to image files with support for l
 - Off-screen rendering support without adding Widget to the Widget tree
 - Automatic pagination export function for long lists/long content
 - Configurable compilation options to enable/disable image formats on demand to reduce app size
-- Uses native libraries (libpng, libjpeg-turbo) for high performance and quality
+- Uses native libraries (libpng, libjpeg-turbo) for high performance and quality on mobile platforms (Android/iOS/macOS)
+- Uses libvipsffi for image processing on Windows and Linux platforms
 
 ## Installation
 
@@ -129,7 +130,9 @@ controller.toImageFileFromLongWidget(
 
 ## Building
 
-The plugin uses CMake for building native code. The native libraries (libpng, libjpeg-turbo, libyuv) are integrated as submodules and can be conditionally compiled based on the configuration options.
+The plugin uses CMake for building native code on mobile platforms. The native libraries (libpng, libjpeg-turbo, libyuv) are integrated as submodules and can be conditionally compiled based on the configuration options.
+
+On Windows and Linux platforms, the plugin uses libvipsffi for image processing.
 
 When a feature is disabled at compile time:
 - The corresponding source files are excluded from compilation

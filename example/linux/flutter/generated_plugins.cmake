@@ -3,10 +3,10 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
+  libvips_ffi_linux
 )
 
 list(APPEND FLUTTER_FFI_PLUGIN_LIST
-  chunked_widget_to_image
 )
 
 set(PLUGIN_BUNDLED_LIBRARIES)
