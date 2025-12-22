@@ -8,8 +8,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:chunked_widget_to_image/chunked_widget_to_image.dart';
-
-import '../libvips/libvips_ffi.dart';
+import 'package:widget_to_image_converter/widget_to_image_converter.dart';
 import 'chunked_widget_to_image_bindings_generated.dart';
 
 const int _kMaxChunkSize = 16384;//大部分平台能显示的图片最大宽高
@@ -40,6 +39,20 @@ extension RenderRepaintBoundaryExt on RenderRepaintBoundary{
     if (chunkHeight <= 0) {
       throw ArgumentError('chunkHeight 必须大于 0');
     }
+    if(Platform.isWindows||Platform.isLinux){
+      try{
+        final ui.Image chunkImage = await toImage(pixelRatio: pixelRatio);
+        ByteData? byteData =
+        await chunkImage.toByteData(format: ui.ImageByteFormat.rawRgba);
+        Uint8List imageBytes = byteData!.buffer.asUint8List();
+        convertRgbaToJpeg(imageBytes,convSize.width.ceil(),convSize.height.ceil(),100,outPath);
+        chunkImage.dispose();
+        callback?.call(true,'保存成功');
+      } catch (e){
+        callback?.call(false,'保存图片失败');
+      }
+      return;
+    }
     final List<Rect> chunksRect = [];
     final double totalHeight = convSize.height;
     double dy = 0;
@@ -52,49 +65,6 @@ extension RenderRepaintBoundaryExt on RenderRepaintBoundary{
           convSize.width,
           currentChunkHeight));
       dy += chunkHeight;
-    }
-    if(Platform.isWindows||Platform.isLinux){
-      final chunkDataList = <({Uint8List data, int width, int height})>[];
-      for (final chunkRect in chunksRect) {
-        final ui.Image chunkImage =
-        await toImageChunks(convSize: convSize,chunkRect: chunkRect, pixelRatio: pixelRatio);
-        ByteData? byteData =
-        await chunkImage.toByteData(format: ui.ImageByteFormat.rawRgba);
-        Uint8List imageBytes = byteData!.buffer.asUint8List();
-        chunkDataList.add((
-        data: imageBytes,
-        width: chunkImage.width,
-        height: chunkImage.height,
-        ));
-      }
-      if (chunkDataList.isEmpty) {
-        callback?.call(false,'保存图片失败');
-        return;
-      }
-      try {
-        if (chunkDataList.length == 1) {
-          final chunk = chunkDataList.first;
-          final spec = JoinPipelineSpec()
-              .addInputRawRgba(chunk.data, chunk.width, chunk.height)
-              .outputPng();
-          VipsPipelineCompute.executeJoinToFile(spec, outPath).then((value){
-            callback?.call(true,'保存图片成功');
-          });
-        } else {
-          final spec = JoinPipelineSpec();
-          for (final chunk in chunkDataList) {
-            spec.addInputRawRgba(chunk.data, chunk.width, chunk.height);
-          }
-          spec.vertical().outputAs(
-              OutputSpec(format == ImageFormat.png ? '.png' : '.jpg'));
-          VipsPipelineCompute.executeJoinToFile(spec, outPath).then((value){
-            callback?.call(true,'保存图片成功');
-          });
-        }
-      } catch (e) {
-        callback?.call(false,'保存图片失败:$e');
-      }
-      return;
     }
     ffi.Pointer<ffi.Int64>? widgetToImageContext = await _createWidgetToImage(outPath: outPath,
         width: outSize.width.ceil(),

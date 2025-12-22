@@ -1,6 +1,6 @@
 ## 1.0.0
 
-* Windows 和 Linux 平台暂时使用 libvipsffi 实现图像处理功能
+* Windows 和 Linux 平台使用 widget_to_image_converter 实现图像处理功能
 * 更新文档以反映 Windows 和 Linux 平台的技术实现变更
 * Bump version to 1.0.0
 

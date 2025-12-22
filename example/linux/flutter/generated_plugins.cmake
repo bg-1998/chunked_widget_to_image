@@ -3,10 +3,10 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
-  libvips_ffi_linux
 )
 
 list(APPEND FLUTTER_FFI_PLUGIN_LIST
+  widget_to_image_converter
 )
 
 set(PLUGIN_BUNDLED_LIBRARIES)

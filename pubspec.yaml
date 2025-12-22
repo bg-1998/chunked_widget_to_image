@@ -19,10 +19,7 @@ dependencies:
     sdk: flutter
   plugin_platform_interface: ^2.0.2
   ffi: ^2.1.3
-  libvips_ffi_core: ^0.1.0+8.16.0
-  libvips_ffi_api: ^0.1.3+8.16.0
-  libvips_ffi_windows: ^0.1.0+8.17.3
-  libvips_ffi_linux: ^0.1.0+8.16.0
+  widget_to_image_converter: ^1.1.1
 
 dev_dependencies:
   ffigen: ^13.0.0
