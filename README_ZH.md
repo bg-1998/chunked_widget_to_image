@@ -24,7 +24,7 @@
 
 ```yaml
 dependencies:
-  chunked_widget_to_image: ^0.0.2
+  chunked_widget_to_image: ^latest
 ```
 
 然后运行：

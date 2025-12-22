@@ -24,7 +24,7 @@ Add this to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  chunked_widget_to_image: ^0.0.2
+  chunked_widget_to_image: ^latest
 ```
 
 Then run:
