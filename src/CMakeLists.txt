@@ -29,7 +29,7 @@ if(DEFINED ENV{CHUNKED_WIDGET_TO_PNG})
 endif()
 
 if(DEFINED ENV{CHUNKED_WIDGET_TO_JPEG})
-  set(WITH_JPEG $ENV{CHUNKED_WIDGET_TO_PNG})
+  set(WITH_JPEG $ENV{CHUNKED_WIDGET_TO_JPEG})
 endif()
 
 # --------------------------------------------------------------------------------

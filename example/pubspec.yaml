@@ -16,6 +16,9 @@ dependencies:
   flutter_smart_dialog: ^4.9.8+9
   chunked_widget_to_image:
     path: ../
+#  chunked_widget_to_image:
+#    git:
+#      url: https://github.com/bg-1998/chunked_widget_to_image.git
 
   cupertino_icons: ^1.0.8
 
