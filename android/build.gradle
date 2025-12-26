@@ -34,9 +34,9 @@ android {
         minSdk = 24
     }
 
-    externalNativeBuild {
-        cmake {
-            path = "../src/CMakeLists.txt"
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['src/main/jniLibs']
         }
     }
 }

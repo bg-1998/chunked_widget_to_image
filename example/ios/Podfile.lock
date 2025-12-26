@@ -5,11 +5,14 @@ PODS:
   - path_provider_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
+  - widget_to_image_converter (0.0.1):
+    - Flutter
 
 DEPENDENCIES:
   - chunked_widget_to_image (from `.symlinks/plugins/chunked_widget_to_image/ios`)
   - Flutter (from `Flutter`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
+  - widget_to_image_converter (from `.symlinks/plugins/widget_to_image_converter/ios`)
 
 EXTERNAL SOURCES:
   chunked_widget_to_image:
@@ -18,11 +21,14 @@ EXTERNAL SOURCES:
     :path: Flutter
   path_provider_foundation:
     :path: ".symlinks/plugins/path_provider_foundation/darwin"
+  widget_to_image_converter:
+    :path: ".symlinks/plugins/widget_to_image_converter/ios"
 
 SPEC CHECKSUMS:
-  chunked_widget_to_image: 4d64700f63bb1d0bba48f8f7635337fc6076381a
+  chunked_widget_to_image: 3a42b0ff164cdf384a49e112b1b2e7fc12bb7ba4
   Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
   path_provider_foundation: bb55f6dbba17d0dccd6737fe6f7f34fbd0376880
+  widget_to_image_converter: a0799e58d3b2acee287530b27735ce0f369be4d1
 
 PODFILE CHECKSUM: 3c63482e143d1b91d2d2560aee9fb04ecc74ac7e
 

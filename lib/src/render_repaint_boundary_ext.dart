@@ -9,7 +9,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:chunked_widget_to_image/chunked_widget_to_image.dart';
 import 'package:widget_to_image_converter/widget_to_image_converter.dart';
-import 'chunked_widget_to_image_bindings_generated.dart';
+import 'chunked_widget_to_image_bindings.dart';
 
 const int _kMaxChunkSize = 16384;//大部分平台能显示的图片最大宽高
 
@@ -66,7 +66,7 @@ extension RenderRepaintBoundaryExt on RenderRepaintBoundary{
           currentChunkHeight));
       dy += chunkHeight;
     }
-    ffi.Pointer<ffi.Int64>? widgetToImageContext = await _createWidgetToImage(outPath: outPath,
+    ffi.Pointer<ImageContext>? widgetToImageContext = await _createWidgetToImage(outPath: outPath,
         width: outSize.width.ceil(),
         height: outSize.height.ceil(), format: format.index);
     if (widgetToImageContext == null||widgetToImageContext.address==0) {
@@ -96,6 +96,7 @@ extension RenderRepaintBoundaryExt on RenderRepaintBoundary{
         chunkPointer: memPtr,
         srcStride: srcStride,
         rows: rows,
+        format: format.index
       )).then((value) async {
         byteData = null;
         chunkImage.dispose();
@@ -107,7 +108,7 @@ extension RenderRepaintBoundaryExt on RenderRepaintBoundary{
           curChunkIndex++;
           writeImageBytes();
         } else {
-          int result = await _saveWidgetToImage(widgetToImageContext);
+          int result = await _saveWidgetToImage(widgetToImageContext,format.index);
           if (result != 0) {
             callback?.call(false,'保存图片失败');
           } else {
@@ -173,21 +174,28 @@ ffi.Pointer<ffi.Uint8> generateUint8ListPointer(Uint8List types) {
 /// [width] 图像的宽度
 /// [height] 图像的高度
 /// [format] 图像格式 0:png 1:jpeg
-Future<ffi.Pointer<ffi.Int64>?> _createWidgetToImage({
+Future<ffi.Pointer<ImageContext>?> _createWidgetToImage({
   required String outPath,
   required int width,
   required int height,
   required int format,
 }) async {
   final cPath = outPath.toNativeUtf8();
-  ffi.Pointer<ffi.Int64>? result;
+  ffi.Pointer<ImageContext>? result;
   try {
-    result = _bindings.create_chunked_widget_to_image(
-      cPath.cast<ffi.Char>(),
-      width,
-      height,
-      format,
-    );
+    if(format==0){
+      result = _bindings.create_png_context(
+        cPath.cast<ffi.Char>(),
+        width,
+        height,
+      );
+    } else {
+      result = _bindings.create_jpeg_context(
+        cPath.cast<ffi.Char>(),
+        width,
+        height,
+      );
+    }
   } finally {
     calloc.free(cPath);
   }
@@ -200,12 +208,21 @@ Future<ffi.Pointer<ffi.Int64>?> _createWidgetToImage({
 int _writeWidgetToImage(WriteImageComputeParams params){
   int result;
   try {
-    result = _bindings.write_chunked_widget_to_image(
-      params.ctxPointer,
-      params.chunkPointer,
-      params.srcStride,
-      params.rows,
-    );
+    if(params.format==0){
+      result = _bindings.write_png_data(
+        params.ctxPointer,
+        params.chunkPointer,
+        params.srcStride,
+        params.rows,
+      );
+    } else {
+      result = _bindings.write_jpeg_data(
+        params.ctxPointer,
+        params.chunkPointer,
+        params.srcStride,
+        params.rows,
+      );
+    }
   } catch (e) {
     result = -1;
   }
@@ -213,10 +230,14 @@ int _writeWidgetToImage(WriteImageComputeParams params){
 }
 
 /// 保存图像数据
-Future<int> _saveWidgetToImage(ffi.Pointer<ffi.Int64> ctx) async {
+Future<int> _saveWidgetToImage(ffi.Pointer<ImageContext> ctx,int format) async {
   int result;
   try {
-    result = _bindings.save_chunked_widget_to_image(ctx);
+    if(format==0){
+      result = _bindings.save_png_image(ctx);
+    } else {
+      result = _bindings.save_jpeg_image(ctx);
+    }
   } catch (e) {
     result = -1;
   }
@@ -249,11 +270,13 @@ final ffi.DynamicLibrary _dylib = () {
 }();
 
 /// The bindings to the native functions in [_dylib].
-final WidgetToImageBindings _bindings = WidgetToImageBindings(_dylib);
+final ChunkedWidgetToImageBindings _bindings = ChunkedWidgetToImageBindings(_dylib);
 
 class WriteImageComputeParams {
+  /// 图像格式 0:png 1:jpeg
+  int format;
   /// 创建图像缓冲区指针
-  final ffi.Pointer<ffi.Int64> ctxPointer;
+  final ffi.Pointer<ImageContext> ctxPointer;
   /// 分块图像字节指针
   final ffi.Pointer<ffi.Uint8> chunkPointer;
   /// 分块图像的宽度
@@ -261,5 +284,5 @@ class WriteImageComputeParams {
   /// 分块图像的高度
   final int rows;
   WriteImageComputeParams({required this.ctxPointer,required this.chunkPointer
-    ,required this.srcStride,required this.rows});
+    ,required this.srcStride,required this.rows,required this.format});
 }
