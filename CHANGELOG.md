@@ -1,7 +1,9 @@
 ## 1.0.0
 
-* Windows 和 Linux 平台使用 widget_to_image_converter 实现图像处理功能
-* 更新文档以反映 Windows 和 Linux 平台的技术实现变更
+* BREAKING CHANGE: 移除构建时配置选项 (CHUNKED_WIDGET_TO_PNG 和 CHUNKED_WIDGET_TO_JPEG)
+* BREAKING CHANGE: 使用预编译静态库替代构建时编译，提供更快的构建时间和一致的行为
+* BREAKING CHANGE: macOS 平台现在仅支持 ARM64 架构 (Apple Silicon)
+* 更新文档以反映平台实现变更
 * Bump version to 1.0.0
 
 ## 0.0.2

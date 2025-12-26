@@ -14,7 +14,7 @@ A Flutter plugin that converts Flutter widgets to image files with support for l
 - Support exporting ultra-large sized images (breaking most platform texture limitations)
 - Off-screen rendering support without adding Widget to the Widget tree
 - Automatic pagination export function for long lists/long content
-- Configurable compilation options to enable/disable image formats on demand to reduce app size
+- Pre-compiled static libraries for faster build times and consistent behavior
 - Uses native libraries (libpng, libjpeg-turbo) for high performance and quality on mobile platforms (Android/iOS/macOS)
 - Uses widget_to_image_converter for image processing on Windows and Linux platforms
 
@@ -33,36 +33,14 @@ Then run:
 flutter pub get
 ```
 
-## Configuration
+## Platform Implementation
 
-By default, the plugin includes support for both PNG and JPEG formats. However, you can customize this behavior by setting environment variables at build time.
+This plugin uses different implementations based on the platform:
 
-To disable certain image format supports in your build, set environment variables when running or building your Flutter app:
+- Mobile platforms (Android/iOS/macOS): Uses native libraries (libpng, libjpeg-turbo) for high performance and quality
+- Desktop platforms (Windows/Linux): Uses widget_to_image_converter for image processing
 
-```bash
-# Disable PNG support
-CHUNKED_WIDGET_TO_PNG=OFF flutter run
-
-# Disable JPEG support
-CHUNKED_WIDGET_TO_JPEG=OFF flutter run
-
-# Disable both PNG and JPEG support (not recommended)
-CHUNKED_WIDGET_TO_PNG=OFF CHUNKED_WIDGET_TO_JPEG=OFF flutter run
-```
-
-In Android Studio, you can set these environment variables in your Run/Debug Configuration:
-1. Go to Run > Edit Configurations...
-2. Select your Flutter configuration
-3. In the Environment Variables section, add:
-   - Name: `CHUNKED_WIDGET_TO_PNG`, Value: `OFF` (to disable PNG)
-   - Name: `CHUNKED_WIDGET_TO_JPEG`, Value: `OFF` (to disable JPEG)
-
-### Configuration Options
-
-- `CHUNKED_WIDGET_TO_PNG`: Enable/disable PNG support (default: ON)
-- `CHUNKED_WIDGET_TO_JPEG`: Enable/disable JPEG support (default: ON)
-
-Disabling unused image format support can significantly reduce your app's binary size.
+The plugin now uses pre-compiled static libraries for image processing instead of build-time configuration options. This approach eliminates the need for build-time environment variables and provides faster build times.
 
 ## Usage
 
@@ -130,16 +108,19 @@ controller.toImageFileFromLongWidget(
 
 ## Building
 
-The plugin uses CMake for building native code on mobile platforms. The native libraries (libpng, libjpeg-turbo, libyuv) are integrated as submodules and can be conditionally compiled based on the configuration options.
+The plugin now uses pre-compiled static libraries for image processing instead of building from source. This approach provides:
 
-On Windows and Linux platforms, the plugin uses widget_to_image_converter for image processing.
+- Faster build times
+- Consistent behavior across environments
+- Reduced build complexity
 
-When a feature is disabled at compile time:
-- The corresponding source files are excluded from compilation
-- The third-party libraries are not built or linked
-- The API functions still exist but will return appropriate error codes when used
+Mobile platforms (Android/iOS/macOS) use native libraries (libpng, libjpeg-turbo) distributed as pre-compiled static libraries.
 
-This approach ensures clean compilation without missing library dependencies while providing clear feedback to developers attempting to use disabled features.
+Desktop platforms (Windows/Linux) continue to use widget_to_image_converter for image processing.
+
+## macOS Architecture Support
+
+The macOS platform now supports only ARM64 architecture (Apple Silicon). This change simplifies distribution and ensures optimal performance on modern macOS devices.
 
 ## Error Handling
 
