@@ -6,10 +6,10 @@ import 'dart:ui' as ui;
 import '../chunked_widget_to_image.dart';
 
 class WidgetToImageController {
-  late GlobalKey _containerKey;
+  late GlobalKey containerKey;
 
   WidgetToImageController() {
-    _containerKey = GlobalKey();
+    containerKey = GlobalKey();
   }
 
   /// 将widget保存为图片
@@ -29,7 +29,7 @@ class WidgetToImageController {
   }) {
     Future.delayed(delay, () async {
       try {
-        var findRenderObject = _containerKey.currentContext?.findRenderObject();
+        var findRenderObject = containerKey.currentContext?.findRenderObject();
         if (findRenderObject == null) {
           return null;
         }
@@ -37,7 +37,7 @@ class WidgetToImageController {
             findRenderObject as RenderRepaintBoundary;
         boundary.toImageByChunks(
           outPath: outPath,
-          pixelRatio: 1,
+          pixelRatio: pixelRatio,
           format: format,
           callback: callback,
         );
@@ -285,7 +285,7 @@ class WidgetToImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RepaintBoundary(key: controller._containerKey, child: child);
+    return RepaintBoundary(key: controller.containerKey, child: child);
   }
 }
 

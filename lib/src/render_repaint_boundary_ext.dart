@@ -8,7 +8,6 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:chunked_widget_to_image/chunked_widget_to_image.dart';
-import 'package:widget_to_image_converter/widget_to_image_converter.dart';
 import 'chunked_widget_to_image_bindings.dart';
 
 const int _kMaxChunkSize = 16384;//大部分平台能显示的图片最大宽高
@@ -38,20 +37,6 @@ extension RenderRepaintBoundaryExt on RenderRepaintBoundary{
         math.min(convSize.width*pixelRatio,_kMaxChunkSize)).ceil()) ~/ 2) * 2;
     if (chunkHeight <= 0) {
       throw ArgumentError('chunkHeight 必须大于 0');
-    }
-    if(Platform.isWindows||Platform.isLinux){
-      try{
-        final ui.Image chunkImage = await toImage(pixelRatio: pixelRatio);
-        ByteData? byteData =
-        await chunkImage.toByteData(format: ui.ImageByteFormat.rawRgba);
-        Uint8List imageBytes = byteData!.buffer.asUint8List();
-        convertRgbaToJpeg(imageBytes,convSize.width.ceil(),convSize.height.ceil(),100,outPath);
-        chunkImage.dispose();
-        callback?.call(true,'保存成功');
-      } catch (e){
-        callback?.call(false,'保存图片失败');
-      }
-      return;
     }
     final List<Rect> chunksRect = [];
     final double totalHeight = convSize.height;

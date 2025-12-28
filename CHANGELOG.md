@@ -1,3 +1,6 @@
+## 1.0.1
+* fix bug
+
 ## 1.0.0
 
 * BREAKING CHANGE: 移除构建时配置选项 (CHUNKED_WIDGET_TO_PNG 和 CHUNKED_WIDGET_TO_JPEG)

@@ -1,7 +1,7 @@
 # Chunked Widget to Image Plugin
 
 ![](https://img.shields.io/badge/Awesome-Flutter-blue)
-![](https://img.shields.io/badge/Platform-Android_iOS_Web_Windows_MacOS_Linux-blue)
+![](https://img.shields.io/badge/Platform-Android_iOS_Web_Windows_MacOS-blue)
 ![](https://img.shields.io/badge/License-MIT-blue)
 
 Language: English | [简体中文](README_ZH.md)
@@ -15,8 +15,8 @@ A Flutter plugin that converts Flutter widgets to image files with support for l
 - Off-screen rendering support without adding Widget to the Widget tree
 - Automatic pagination export function for long lists/long content
 - Pre-compiled static libraries for faster build times and consistent behavior
-- Uses native libraries (libpng, libjpeg-turbo) for high performance and quality on mobile platforms (Android/iOS/macOS)
-- Uses widget_to_image_converter for image processing on Windows and Linux platforms
+- Uses native libraries (libpng, libjpeg-turbo) for high performance and quality on supported platforms (Android/iOS/macOS/Windows)
+- Linux platform is currently not supported
 
 ## Installation
 
@@ -37,8 +37,8 @@ flutter pub get
 
 This plugin uses different implementations based on the platform:
 
-- Mobile platforms (Android/iOS/macOS): Uses native libraries (libpng, libjpeg-turbo) for high performance and quality
-- Desktop platforms (Windows/Linux): Uses widget_to_image_converter for image processing
+- Supported platforms (Android/iOS/macOS/Windows): Uses native libraries (libpng, libjpeg-turbo) for high performance and quality
+- Linux platform is currently not supported
 
 The plugin now uses pre-compiled static libraries for image processing instead of build-time configuration options. This approach eliminates the need for build-time environment variables and provides faster build times.
 
@@ -102,7 +102,6 @@ controller.toImageFileFromLongWidget(
 
 - Android
 - iOS
-- Linux
 - macOS
 - Windows
 
@@ -114,9 +113,10 @@ The plugin now uses pre-compiled static libraries for image processing instead o
 - Consistent behavior across environments
 - Reduced build complexity
 
-Mobile platforms (Android/iOS/macOS) use native libraries (libpng, libjpeg-turbo) distributed as pre-compiled static libraries.
+Supported platforms (Android/iOS/macOS/Windows) use native libraries (libpng, libjpeg-turbo) distributed as pre-compiled static libraries.
 
-Desktop platforms (Windows/Linux) continue to use widget_to_image_converter for image processing.
+Windows platform uses native libraries (libpng, libjpeg-turbo) for high performance and quality.
+Linux platform is currently not supported.
 
 ## macOS Architecture Support
 

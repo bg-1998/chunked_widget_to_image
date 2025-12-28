@@ -1,23 +1,30 @@
-# The Flutter tooling requires that developers have a version of Visual Studio
-# installed that includes CMake 3.14 or later. You should not increase this
-# version, as doing so will cause the plugin to fail to compile for some
-# customers of the plugin.
+
 cmake_minimum_required(VERSION 3.14)
 
-# Project-level configuration.
 set(PROJECT_NAME "chunked_widget_to_image")
 project(${PROJECT_NAME} LANGUAGES CXX)
 
-# Invoke the build for native code shared with the other target platforms.
-# This can be changed to accommodate different builds.
-add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/../src" "${CMAKE_CURRENT_BINARY_DIR}/shared")
+# 创建一个STATIC库目标，可以使用POST_BUILD命令
+add_library(${PROJECT_NAME} STATIC
+        "dummy.cpp"  # 添加一个空的cpp文件
+)
 
-# List of absolute paths to libraries that should be bundled with the plugin.
-# This list could contain prebuilt libraries, or libraries created by an
-# external build triggered from this build file.
+# 设置源文件内容（创建一个空的cpp文件）
+file(WRITE "${CMAKE_CURRENT_SOURCE_DIR}/dummy.cpp" "")
+
+# 自动获取lib目录下的所有DLL文件
+file(GLOB DLL_FILES "${CMAKE_CURRENT_SOURCE_DIR}/lib/*.dll")
+
+# 复制所有DLL文件到输出目录
+foreach(dll_file ${DLL_FILES})
+    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            "${dll_file}"
+            $<TARGET_FILE_DIR:${PROJECT_NAME}>)
+endforeach()
+
+# 更新捆绑库列表
 set(chunked_widget_to_image_bundled_libraries
-  # Defined in ../src/CMakeLists.txt.
-  # This can be changed to accommodate different builds.
-  $<TARGET_FILE:chunked_widget_to_image>
-  PARENT_SCOPE
+        ${DLL_FILES}
+        PARENT_SCOPE
 )
