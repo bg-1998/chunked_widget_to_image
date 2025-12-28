@@ -1,7 +1,7 @@
 # Chunked Widget to Image 插件
 
 ![](https://img.shields.io/badge/Awesome-Flutter-blue)
-![](https://img.shields.io/badge/Platform-Android_iOS_Web_Windows_MacOS_Linux-blue)
+![](https://img.shields.io/badge/Platform-Android_iOS_Web_Windows_MacOS-blue)
 ![](https://img.shields.io/badge/License-MIT-blue)
 
 语言: 简体中文 | [English](README.md)
@@ -15,8 +15,8 @@
 - 离屏渲染支持，无需将 Widget 添加到 Widget 树中即可导出
 - 长列表/长内容自动分页导出功能
 - 预编译静态库，提供更快的构建时间和一致的行为
-- 移动平台(Android/iOS/macOS)使用原生库(libpng, libjpeg-turbo)保证高性能和高质量
-- Windows 和 Linux 平台使用 widget_to_image_converter 实现图像处理功能
+- 支持平台(Android/iOS/macOS/Windows)使用原生库(libpng, libjpeg-turbo)保证高性能和高质量
+- Linux 平台目前暂不支持
 
 ## 安装
 
@@ -37,8 +37,8 @@ flutter pub get
 
 插件根据平台使用不同的实现方式：
 
-- 移动平台 (Android/iOS/macOS): 使用原生库(libpng, libjpeg-turbo)保证高性能和高质量
-- 桌面平台 (Windows/Linux): 使用 widget_to_image_converter 实现图像处理功能
+- 支持平台 (Android/iOS/macOS/Windows): 使用原生库(libpng, libjpeg-turbo)保证高性能和高质量
+- Linux 平台目前暂不支持
 
 插件现在使用预编译的静态库进行图像处理，而不是构建时配置选项。这种方法消除了构建时环境变量的需求，并提供更快的构建时间。
 
@@ -102,7 +102,6 @@ controller.toImageFileFromLongWidget(
 
 - Android
 - iOS
-- Linux
 - macOS
 - Windows
 
@@ -114,9 +113,10 @@ controller.toImageFileFromLongWidget(
 - 跨环境的一致行为
 - 简化的构建复杂度
 
-移动平台 (Android/iOS/macOS) 使用作为预编译静态库分发的原生库 (libpng, libjpeg-turbo)。
+支持平台 (Android/iOS/macOS/Windows) 使用作为预编译静态库分发的原生库 (libpng, libjpeg-turbo)。
 
-桌面平台 (Windows/Linux) 继续使用 widget_to_image_converter 实现图像处理功能。
+Windows 平台使用原生库(libpng, libjpeg-turbo)保证高性能和高质量。
+Linux 平台目前暂不支持。
 
 ## macOS 架构支持
 
