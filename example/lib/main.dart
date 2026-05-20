@@ -199,6 +199,7 @@ class _MyHomePageState extends State<MyHomePage> {
         final endTime = DateTime.now();
         final duration = endTime.difference(startTime);
         SmartDialog.dismiss();
+        print('耗时: ${duration.inMilliseconds} ms');
         if (result) {
           setState(() {
             exportedFilePath = path;
@@ -323,7 +324,7 @@ class _MyHomePageState extends State<MyHomePage> {
           });
           if (width > 10000) {
             SmartDialog.showToast(
-              '导出成功，低端机上不能显示太大图',
+              '已导出成功，手机上不能显示太大图',
               alignment: Alignment.center,
             );
             return;

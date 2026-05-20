@@ -11,12 +11,12 @@ android {
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_11.toString()
+        jvmTarget = JavaVersion.VERSION_17.toString()
     }
 
     defaultConfig {
@@ -28,10 +28,6 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
-//        ndk {
-//            abiFilters.clear()
-//            abiFilters.add("arm64-v8a")
-//        }
     }
 
     buildTypes {
@@ -41,13 +37,6 @@ android {
             signingConfig = signingConfigs.getByName("debug")
         }
     }
-
-    //排除其他架构
-//    packaging {
-//        jniLibs {
-//            excludes += listOf("lib/armeabi-v7a/**", "lib/x86_64/**")
-//        }
-//    }
 }
 
 flutter {

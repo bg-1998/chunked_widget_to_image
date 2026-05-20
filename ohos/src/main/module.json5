@@ -1,0 +1,10 @@
+{
+  "module": {
+    "name": "chunked_widget_to_image",
+    "type": "har",
+    "deviceTypes": [
+      "default",
+      "tablet",
+    ]
+  }
+}

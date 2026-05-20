@@ -1,0 +1,10 @@
+{
+  "name": "chunked_widget_to_image",
+  "version": "1.0.0",
+  "description": "A Flutter plugin for converting widgets to images efficiently.",
+  "author": "",
+  "license": "Apache-2.0",
+  "main": "",
+  "types": "",
+  "dependencies": {}
+}

@@ -211,6 +211,7 @@ int _writeWidgetToImage(WriteImageComputeParams params){
   } catch (e) {
     result = -1;
   }
+  calloc.free(params.chunkPointer);
   return result;
 }
 
@@ -245,7 +246,7 @@ final ffi.DynamicLibrary _dylib = () {
   if (Platform.isMacOS || Platform.isIOS) {
     return ffi.DynamicLibrary.open('$_libName.framework/$_libName');
   }
-  if (Platform.isAndroid || Platform.isLinux) {
+  if (Platform.isAndroid || Platform.isLinux || Platform.isOhos) {
     return ffi.DynamicLibrary.open('lib$_libName.so');
   }
   if (Platform.isWindows) {
