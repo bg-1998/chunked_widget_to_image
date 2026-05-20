@@ -1,6 +1,6 @@
 name: chunked_widget_to_image
 description: "A Flutter plugin to convert widgets to image files with support for large images via chunking"
-version: 1.0.1
+version: 2.0.0
 homepage: https://github.com/bg-1998/chunked_widget_to_image.git
 
 topics:
@@ -11,8 +11,8 @@ topics:
   - libjpeg
 
 environment:
-  sdk: ^3.0.0
-  flutter: '>=3.10.0'
+  sdk: ^3.9.2
+  flutter: '>=3.3.0'
 
 dependencies:
   flutter:

@@ -1,3 +1,11 @@
+## 2.0.0
+
+* BREAKING CHANGE: 更新 SDK 约束至 ^3.3.0
+* BREAKING CHANGE: 更新 Flutter 约束至 '>=3.9.2'
+* 增加 Ohos 平台支持
+* 优化构建逻辑
+* Bump version to 2.0.0
+
 ## 1.0.1
 * fix bug
 
