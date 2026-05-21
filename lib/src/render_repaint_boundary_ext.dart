@@ -8,6 +8,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:chunked_widget_to_image/chunked_widget_to_image.dart';
+import '../platform_utils.dart';
 import 'chunked_widget_to_image_bindings.dart';
 
 const int _kMaxChunkSize = 16384;//大部分平台能显示的图片最大宽高
@@ -241,12 +242,13 @@ Future<ffi.Pointer<ffi.Uint8>> _loadBytesToMemory(ffi.Pointer<ffi.Uint8> bytes,i
 
 const String _libName = 'chunked_widget_to_image';
 
+
 /// The dynamic library in which the symbols for [WidgetToImageBindings] can be found.
 final ffi.DynamicLibrary _dylib = () {
   if (Platform.isMacOS || Platform.isIOS) {
     return ffi.DynamicLibrary.open('$_libName.framework/$_libName');
   }
-  if (Platform.isAndroid || Platform.isLinux || Platform.isOhos) {
+  if (Platform.isAndroid || Platform.isLinux || PlatformUtils.isOhos) {
     return ffi.DynamicLibrary.open('lib$_libName.so');
   }
   if (Platform.isWindows) {
