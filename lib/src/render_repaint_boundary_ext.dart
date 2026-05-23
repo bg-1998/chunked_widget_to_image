@@ -144,6 +144,7 @@ int executeWriteImageIsolate(WriteImageComputeParams params) {
     int result = _writeWidgetToImage(params);
     return result;
   } finally {
+    calloc.free(params.chunkPointer);
   }
 }
 
@@ -212,7 +213,6 @@ int _writeWidgetToImage(WriteImageComputeParams params){
   } catch (e) {
     result = -1;
   }
-  calloc.free(params.chunkPointer);
   return result;
 }
 
