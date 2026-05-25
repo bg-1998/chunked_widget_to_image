@@ -1,3 +1,6 @@
+## 2.0.1
+* fix pnglibconf.h file missing
+
 ## 2.0.0
 
 * BREAKING CHANGE: 更新 SDK 约束至 ^3.3.0
