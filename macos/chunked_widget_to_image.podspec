@@ -13,7 +13,6 @@ A new Flutter FFI plugin project.
   s.license          = { :file => '../LICENSE' }
   s.author           = { 'Your Company' => 'email@example.com' }
 
-  s.platform            = :osx
   s.requires_arc        = true
   s.static_framework    = true
 
@@ -24,16 +23,21 @@ A new Flutter FFI plugin project.
   s.platform = :osx, '10.15'
 
   s.prepare_command = <<-CMD
-      mkdir -p build
-      cd build
-      cmake ../../src -DCMAKE_OSX_SYSROOT=macosx -DCMAKE_OSX_ARCHITECTURES=arm64
-      make
+    set -e
+
+    rm -rf build
+
+    cmake \
+      -S ../src \
+      -B build \
+      -DCMAKE_OSX_SYSROOT=macosx \
+      -DCMAKE_OSX_ARCHITECTURES=arm64 \
+      -DCMAKE_OSX_DEPLOYMENT_TARGET=10.15 \
+      -DCMAKE_BUILD_TYPE=Release \
+      -DPNG_FRAMEWORK=OFF
+
+    cmake --build build --config Release --parallel
   CMD
-  s.script_phase = {
-      :name => 'Build chunked_widget_to_image.framework',
-      :script => 'echo "Using prebuilt framework: build/chunked_widget_to_image.framework"',
-      :execution_position => :before_compile
-  }
 
   s.vendored_frameworks = 'build/chunked_widget_to_image.framework'
   s.preserve_paths = 'build/chunked_widget_to_image.framework'

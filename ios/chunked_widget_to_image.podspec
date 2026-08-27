@@ -22,16 +22,22 @@ A new Flutter FFI plugin project.
   s.platform = :ios, '12.0'
 
   s.prepare_command = <<-CMD
-    mkdir -p build
-    cd build
-    cmake ../../src -DCMAKE_OSX_SYSROOT=iphoneos -DCMAKE_OSX_ARCHITECTURES=arm64
-    make
+    set -e
+
+    rm -rf build
+
+    cmake \
+      -S ../src \
+      -B build \
+      -DCMAKE_SYSTEM_NAME=iOS \
+      -DCMAKE_OSX_SYSROOT=iphoneos \
+      -DCMAKE_OSX_ARCHITECTURES=arm64 \
+      -DCMAKE_OSX_DEPLOYMENT_TARGET=12.0 \
+      -DCMAKE_BUILD_TYPE=Release \
+      -DPNG_FRAMEWORK=OFF
+
+    cmake --build build --config Release --parallel
   CMD
-  s.script_phase = {
-    :name => 'Build chunked_widget_to_image.framework',
-    :script => 'echo "Using prebuilt framework: build/chunked_widget_to_image.framework"',
-    :execution_position => :before_compile
-  }
 
   s.vendored_frameworks = 'build/chunked_widget_to_image.framework'
   s.preserve_paths = 'build/chunked_widget_to_image.framework'
